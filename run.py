@@ -31,7 +31,7 @@ def simulateDistanceTraveled(w, prog):
     pos = [0] * nJoints
     # snakeId = p.loadURDF('sphere2.urdf', cubeStartPos, cubeStartOrientation)
     com_start = calcCOM(p, snakeId, n)
-    for ts in range(400):
+    for ts in range(800):
         for i in range(nJoints):
             p.setJointMotorControl2(snakeId, i, p.POSITION_CONTROL, (hi-lo) * sin(w * ts + i*prog))
         p.stepSimulation()
@@ -41,5 +41,5 @@ def simulateDistanceTraveled(w, prog):
     sys.stdout.flush()
     return distance_traveled
 
-all_distances = [(simulateDistanceTraveled(w, prog), w, prog) for w in np.linspace(0, pi/4, 20) for prog in np.linspace(0, pi/2, 20)]
+all_distances = [(simulateDistanceTraveled(w, prog), w, prog) for w in np.linspace(0, pi/4, 25) for prog in np.linspace(0, pi/2, 25)]
 print(sorted(all_distances)[0])
