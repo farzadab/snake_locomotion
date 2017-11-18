@@ -2,6 +2,7 @@ import pybullet as p
 import pybullet_data
 import numpy as np
 import time
+import sys
 from math import *
 from model_generator import createNLinkSnake
 
@@ -37,6 +38,7 @@ def simulateDistanceTraveled(w, prog):
     
     distance_traveled = np.linalg.norm(np.subtract(calcCOM(p, snakeId, n), com_start))
     print('%4.2f %4.2f %7.3f' %(w, prog, distance_traveled))
+    sys.stdout.flush()
     return distance_traveled
 
 all_distances = [(simulateDistanceTraveled(w, prog), w, prog) for w in np.linspace(0, pi/4, 20) for prog in np.linspace(0, pi/2, 20)]
