@@ -1,0 +1,29 @@
+    <link name="link{{ link_num }}" >
+        <contact>
+            <lateral_friction value="1" />
+        </contact>
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+            <box size=".5 .4 .5"/>
+            </geometry>
+            <material name="orange" />
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+            <box size=".5 .4 .5"/>
+            </geometry>
+            <contact_coefficients mu="1" kp="1" kd="0.1" />
+        </collision>
+
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="1"/>
+            <inertia
+            ixx="1.0" ixy="0.0" ixz="0.0"
+            iyy="1.0" iyz="0.0"
+            izz="1.0"/>
+        </inertial>
+    </link>
