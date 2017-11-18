@@ -17,8 +17,8 @@ def calcCOM(pc, bodyId, numLinks):
 
 def simulateDistanceTraveled(w, prog):
     createNLinkSnake(n)
-    physicsClient = p.connect(p.DIRECT) #or​ ​p.DIRECT​ ​for​ ​non-graphical​ ​version
-    p.setAdditionalSearchPath(pybullet_data.getDataPath()) #use​ ​by​ ​loadURDF
+    physicsClient = p.connect(p.DIRECT) #or p.DIRECT for non-graphical version
+    p.setAdditionalSearchPath(pybullet_data.getDataPath()) #use by loadURDF
     p.setGravity(0,0,-10)
     planeId = p.loadURDF("plane.urdf")
     cubeStartPos = [0,0,.25]
