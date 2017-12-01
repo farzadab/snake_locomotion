@@ -3,6 +3,7 @@
 '''
 from model_generator import createNLinkSnake
 from math import sqrt
+import numpy as np
 
 
 class Snake(object):
@@ -24,6 +25,12 @@ class Snake(object):
             PDJoint(*self.world.getJointInfo(self.my_id, i)[8:10])
             for i in range(self.world.getNumJoints(self.my_id))
         ]
+    
+    def calcCOM(self):
+        return np.average(
+            [self.world.getLinkState(self.my_id, i)[0] for i in range(self.num_links-1)]
+            + [self.world.getBasePositionAndOrientation(self.my_id)[0]],
+            axis=0)
 
     def set_joint_pos_vertical(self, joint_ind, dest):
         '''
@@ -37,10 +44,10 @@ class Snake(object):
 
     def fix_torques(self):
         for i, joint in enumerate(self.joints):
+            # print(i)
             c_pos, c_vel, _, b = self.world.getJointState(self.my_id, i)
-            # if i == 0:
             #     t = joint.calculate_torque(c_pos, c_vel)
-            print(i, c_pos, c_vel, b, joint.calculate_torque(c_pos, c_vel))
+            # print(i, c_pos, c_vel, b, joint.calculate_torque(c_pos, c_vel))
             # self.world.setJointMotorControl2(
             #     self.my_id,
             #     i,
@@ -58,7 +65,7 @@ class Snake(object):
 
 class PDJoint(object):
     def __init__(self, low, high):
-        self.kp = 100
+        self.kp = 10000
         self.lower_limit = low
         self.higher_limit = high
         self.dest_vertical = 0
@@ -69,13 +76,14 @@ class PDJoint(object):
         if dest_vertical > self.higher_limit:
             dest_vertical = self.higher_limit
         self.dest_vertical = dest_vertical
-        print(self.dest_vertical)
+        # print(self.dest_vertical)
 
     def calculate_torque(self, cur_pos, cur_vel):
         # return 0
-        return fix_max(400, (self.dest_vertical - cur_pos) * self.kp - cur_vel * self.kp/10)
+        # print(cur_pos, self.dest_vertical - cur_pos, cur_vel, sqrt(self.kp * 4 * 1), (self.dest_vertical - cur_pos) * self.kp - cur_vel * sqrt(self.kp * 4 * 1))
+        return fix_max(400, (self.dest_vertical - cur_pos) * self.kp - cur_vel * sqrt(self.kp * 4 * 1))
 
 def fix_max(a, b):
     if abs(b) > a:
         return a * b / abs(b)
-    return b + 240 * b/abs(b)
+    return b# + 0 * b/abs(b)

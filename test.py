@@ -1,15 +1,28 @@
 import pybullet as p
+import pybullet_data
 from snake import Snake
 import time
+from math import *
 
 physicsClient = p.connect(p.GUI) #or​ ​p.DIRECT​ ​for​ ​non-graphical​ ​version
-s = Snake(2)
+s = Snake(10)
 s.load(p)
-s.set_joint_pos_vertical(0, 0.4)
-for ts in range(200):
+p.setAdditionalSearchPath(pybullet_data.getDataPath()) #use​ ​by​ ​loadURDF
+p.loadURDF("plane.urdf")
+stepsize = 0.004
+w = pi/50#0.10
+prog = -pi/3#0.18
+p.setTimeStep(stepsize)
+for ts in range(floor(10/stepsize)):
+    p.resetDebugVisualizerCamera(15, 100, -50, s.calcCOM())
+    prog = pi/5 + pi/4*sin(ts / 200)
+    # w = pi/50 + pi/100*sin(ts / 300)
+    for i, joint in enumerate(s.joints):
+        joint.set_dest_vertical((joint.higher_limit-joint.lower_limit) * sin(w * ts + i*prog))
+        # p.setJointMotorControl2(snakeId, i, p.POSITION_CONTROL, (hi-lo) * sin(w * ts + i*prog))
     s.fix_torques()
     p.stepSimulation()
-    time.sleep(0.05)
+    time.sleep(stepsize*3/4)
 
 # import pybullet as p
 # import pybullet_data
@@ -19,8 +32,8 @@ for ts in range(200):
 # from model_generator import createNLinkSnake
 
 # n = 20
-# w = 0.10
-# prog = 0.18
+# w = pi/10#0.10
+# prog = pi/20#0.18
 # createNLinkSnake(n)
 # physicsClient = p.connect(p.GUI) #or​ ​p.DIRECT​ ​for​ ​non-graphical​ ​version
 # p.setAdditionalSearchPath(pybullet_data.getDataPath()) #use​ ​by​ ​loadURDF
