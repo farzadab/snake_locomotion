@@ -65,7 +65,7 @@ class Snake(object):
 
 class PDJoint(object):
     def __init__(self, low, high):
-        self.kp = 10000
+        self.kp = 40000
         self.lower_limit = low
         self.higher_limit = high
         self.dest_vertical = 0
@@ -81,7 +81,7 @@ class PDJoint(object):
     def calculate_torque(self, cur_pos, cur_vel):
         # return 0
         # print(cur_pos, self.dest_vertical - cur_pos, cur_vel, sqrt(self.kp * 4 * 1), (self.dest_vertical - cur_pos) * self.kp - cur_vel * sqrt(self.kp * 4 * 1))
-        return fix_max(400, (self.dest_vertical - cur_pos) * self.kp - cur_vel * sqrt(self.kp * 4 * 1))
+        return fix_max(800, (self.dest_vertical - cur_pos) * self.kp - cur_vel * sqrt(self.kp * 4 * 1))
 
 def fix_max(a, b):
     if abs(b) > a:

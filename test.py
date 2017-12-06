@@ -9,13 +9,14 @@ s = Snake(10)
 s.load(p)
 p.setAdditionalSearchPath(pybullet_data.getDataPath()) #use​ ​by​ ​loadURDF
 p.loadURDF("plane.urdf")
-stepsize = 0.004
-w = pi/50#0.10
+p.setGravity(0,0,-10)
+stepsize = 0.001
+w = pi/100#2*stepsize#0.10
 prog = -pi/3#0.18
 p.setTimeStep(stepsize)
 for ts in range(floor(10/stepsize)):
     p.resetDebugVisualizerCamera(15, 100, -50, s.calcCOM())
-    prog = pi/5 + pi/4*sin(ts / 200)
+    # prog = pi/5 + pi/4*sin(ts / 200)
     # w = pi/50 + pi/100*sin(ts / 300)
     for i, joint in enumerate(s.joints):
         joint.set_dest_vertical((joint.higher_limit-joint.lower_limit) * sin(w * ts + i*prog))
