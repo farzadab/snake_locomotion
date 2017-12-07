@@ -3,9 +3,24 @@
 {% block content %}
     {% for link_num in links %}
         {% include "simple_link.urdf.jinja2" %}
+        {% if not loop.last %}
+            {% include "itty_bitty_link.urdf.jinja2" %}
+        {% endif %}
     {% endfor %}
 
     {% for par_num, child_num in joints %}
+        {% set joint_num = 'x_' + par_num %}
+        {% set par_name = 'link_' + par_num %}
+        {% set child_name = 'itty_bitty_link_' + par_num %}
+        {% set axis = '0 0 1' %}
+        {% set origin = '0 -.5 0' %}
+        {% include "simple_joint.urdf.jinja2" %}
+
+        {% set joint_num = 'y_' + par_num %}
+        {% set par_name = 'itty_bitty_link_' + par_num %}
+        {% set child_name = 'link_' + child_num %}
+        {% set axis = '1 0 0' %}
+        {% set origin = '0 0 0' %}
         {% include "simple_joint.urdf.jinja2" %}
     {% endfor %}
 {% endblock %}

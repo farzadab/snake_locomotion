@@ -10,7 +10,7 @@ DEFAULT_OUTPUT_FILE = "snake.urdf"
 
 def createNLinkSnake(n, outFile=DEFAULT_OUTPUT_FILE):
     template = env.get_template('snake.urdf.jinja2')
-    links = range(n)
+    links = list(map(str, range(n)))
     with open(outFile, 'w') as out:
         model = template.render(model_name="snake", links=links, joints=zip(links[:-1], links[1:]))
         out.write(model)
