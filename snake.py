@@ -33,7 +33,7 @@ class Snake(object):
     A Snake model that can be loaded and controlled in a PyBullet environment
     '''
     def __init__(self, n):
-        createNLinkSnake(n, inFile='snake_with_y-axis.urdf.jinja2')
+        createNLinkSnake(n)
         self.num_links = n
         self.joints = []
         self.my_id = -1
@@ -46,7 +46,7 @@ class Snake(object):
         self.my_id = world.loadURDF(SnakeUrdfFile, start_pos, start_quaternion)
         self.world = ObjectWorld(world, self.my_id)
         self.joints = [
-            Joint(self.world, i, i+1) for i in range(0, self.world.getNumJoints(), 2)
+            Joint(self.world, i, -1) for i in range(0, self.world.getNumJoints())
         ]
 
     def calcCOM(self):
