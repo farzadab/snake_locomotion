@@ -7,9 +7,10 @@ env = Environment(
     autoescape=select_autoescape(['html', 'xml'])
 )
 DEFAULT_OUTPUT_FILE = "snake.urdf"
+DEFAULT_IN_FILE = "snake.urdf.jinja2"
 
-def createNLinkSnake(n, outFile=DEFAULT_OUTPUT_FILE):
-    template = env.get_template('snake.urdf.jinja2')
+def createNLinkSnake(n, outFile=DEFAULT_OUTPUT_FILE, inFile=DEFAULT_IN_FILE):
+    template = env.get_template(inFile)
     links = list(map(str, range(n)))
     with open(outFile, 'w') as out:
         model = template.render(model_name="snake", links=links, joints=zip(links[:-1], links[1:]))

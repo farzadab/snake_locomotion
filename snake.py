@@ -1,7 +1,7 @@
 '''
     A Snake model that can be loaded and controlled in a PyBullet environment
 '''
-from model_generator import createNLinkSnake
+from model_generator import createNLinkSnake, DEFAULT_OUTPUT_FILE as SnakeUrdfFile
 from math import sqrt
 import numpy as np
 
@@ -33,7 +33,7 @@ class Snake(object):
     A Snake model that can be loaded and controlled in a PyBullet environment
     '''
     def __init__(self, n):
-        createNLinkSnake(n)
+        createNLinkSnake(n, inFile='snake_with_y-axis.urdf.jinja2')
         self.num_links = n
         self.joints = []
         self.my_id = -1
@@ -43,7 +43,7 @@ class Snake(object):
         '''Load this snake in the simulated world'''
         start_pos = [p_x, p_y, .25]
         start_quaternion = world.getQuaternionFromEuler([r_x, r_y, r_z])
-        self.my_id = world.loadURDF('snake.urdf', start_pos, start_quaternion)
+        self.my_id = world.loadURDF(SnakeUrdfFile, start_pos, start_quaternion)
         self.world = ObjectWorld(world, self.my_id)
         self.joints = [
             Joint(self.world, i, i+1) for i in range(0, self.world.getNumJoints(), 2)
