@@ -19,7 +19,8 @@ for ts in range(floor(10/stepsize)):
     # prog = pi/5 + pi/4*sin(ts / 200)
     # w = pi/50 + pi/100*sin(ts / 300)
     for i, joint in enumerate(s.joints):
-        joint.set_dest_vertical((joint.higher_limit-joint.lower_limit) * sin(w * ts + i*prog))
+        # joint.set_dest_vertical((0.02) * abs(sin(w * ts + i*prog + pi/2)))
+        joint.set_dest_horizontal(sin(w * ts + i*prog))
         # p.setJointMotorControl2(snakeId, i, p.POSITION_CONTROL, (hi-lo) * sin(w * ts + i*prog))
     s.fix_torques()
     p.stepSimulation()
