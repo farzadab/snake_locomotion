@@ -6,6 +6,7 @@ from math import *
 
 physicsClient = p.connect(p.GUI) #or​ ​p.DIRECT​ ​for​ ​non-graphical​ ​version
 s = Snake(10)
+# s = Snake(2)
 s.load(p)
 p.setAdditionalSearchPath(pybullet_data.getDataPath()) #use​ ​by​ ​loadURDF
 p.loadURDF("plane.urdf")
@@ -16,6 +17,7 @@ prog = -pi/3#0.18
 p.setTimeStep(stepsize)
 for ts in range(floor(10/stepsize)):
     # p.resetDebugVisualizerCamera(15, 100, -50, s.calcCOM())
+    p.resetDebugVisualizerCamera(8, 50, -50, s.calcCOM())
     # prog = pi/5 + pi/4*sin(ts / 200)
     # w = pi/50 + pi/100*sin(ts / 300)
     for i, joint in enumerate(s.joints):

@@ -41,6 +41,7 @@ class Snake(object):
 
     def load(self, world, p_x=0, p_y=0, r_x=0, r_y=0, r_z=0):
         '''Load this snake in the simulated world'''
+        # start_pos = [p_x, p_y, .4]
         start_pos = [p_x, p_y, .25]
         start_quaternion = world.getQuaternionFromEuler([r_x, r_y, r_z])
         self.my_id = world.loadURDF(SnakeUrdfFile, start_pos, start_quaternion)
