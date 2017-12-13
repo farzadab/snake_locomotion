@@ -41,19 +41,28 @@ class Snake(object):
 
     def load(self, world, p_x=0, p_y=0, r_x=0, r_y=0, r_z=0):
         '''Load this snake in the simulated world'''
-        start_pos = [p_x, p_y, .25]
-        start_quaternion = world.getQuaternionFromEuler([r_x, r_y, r_z])
-        self.my_id = world.loadURDF(SnakeUrdfFile, start_pos, start_quaternion)
+        self.start_pos = [p_x, p_y, .25]
+        self.start_quaternion = world.getQuaternionFromEuler([r_x, r_y, r_z])
+        self.my_id = world.loadURDF(SnakeUrdfFile, self.start_pos, self.start_quaternion)
         self.world = ObjectWorld(world, self.my_id)
         self.joints = [
             Joint(self.world, i, -1) for i in range(0, self.world.getNumJoints())
         ]
 
-    def calcCOM(self):
-        return np.average(
-            [self.world.getLinkState(i)[0] for i in range(self.num_links-1)]
-            + [self.world.getBasePositionAndOrientation()[0]],
-            axis=0)
+    def get_head_position(self):
+        return self.world.getBasePositionAndOrientation()[0]
+
+    def get_link_states(self):
+        return (
+            [[self.world.getBasePositionAndOrientation()[0], self.world.getBaseVelocity()[0]]] +
+            [self.world.getLinkState(i, computeLinkVelocity=True)[::6] for i in range(self.num_links-1)]
+        )
+
+    # def get_link_positions(self):
+    #     return [s[0] for s in self.get_link_states()]
+
+    def calc_COM(self):
+        return np.average([s[0] for s in self.get_link_states()], axis=0)
 
     def set_joint_pos_vertical(self, joint_ind, dest):
         '''
@@ -84,8 +93,8 @@ class Joint(object):
     def __init__(self, world, joint_h, joint_v):
         self.world = world
         self.joints = {}
-        self._set_joint('vertical', joint_v)
         self._set_joint('horizontal', joint_h)
+        self._set_joint('vertical', joint_v)
 
     def _set_joint(self, orientation, joint_num):
         if joint_num != -1:
