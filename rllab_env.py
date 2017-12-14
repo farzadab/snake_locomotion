@@ -128,8 +128,8 @@ class SimpleSnakeEnv(Env):
         return self.__observe(), rew, self.__is_done(), {}
 
     def __create_random_objective(self):
-        radius = uniform(3, 7)  # TODO: get these as parameters
-        theta = uniform(-pi/2, pi/2)
+        radius = uniform(.5, 1)  # TODO: get these as parameters
+        theta = uniform(-pi/4, pi/4)
         return [radius * sin(theta), radius * cos(theta)]
 
     def __calc_pos_from_objective(self, pos):
@@ -150,6 +150,8 @@ class SimpleSnakeEnv(Env):
         p.setTimeStep(self.stepsize)
         self.__load_model()
         self.objective = self.__create_random_objective()
+        if self.graphical:
+            p.loadURDF('objective_object.urdf', self.objective + [.3])
         return self.__observe()
 
     @property
