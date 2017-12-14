@@ -1,0 +1,18 @@
+    <link name="objective_link" >
+        <visual>
+            <origin xyz="{{ pos_x }} {{ pos_y }} .25" rpy="0 0 0"/>
+            <geometry>
+            <cylinder length="0.6" radius="0.2"/>
+            </geometry>
+            <material name="orange" />
+        </visual>
+
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="0"/>
+            <inertia
+            ixx="0" ixy="0" ixz="0"
+            iyy="0" iyz="0"
+            izz="0"/>
+        </inertial>
+    </link>
