@@ -5,9 +5,11 @@ from rllab.baselines.linear_feature_baseline import LinearFeatureBaseline
 from rllab.envs.box2d.cartpole_env import CartpoleEnv
 from rllab.envs.normalized_env import normalize
 from rllab.policies.gaussian_mlp_policy import GaussianMLPPolicy
-from rllab_env import SimpleSnakeEnv, LLC
+from rllab_env import SimpleSnakeEnv
+from controllers import LLC
 
-env = SimpleSnakeEnv(num_links=9, controller=None, graphical=False)
+NUM_LINKS = 9
+env = SimpleSnakeEnv(num_links=NUM_LINKS, controller=LLC(NUM_LINKS), graphical=True)
 
 policy = GaussianMLPPolicy(
     env_spec=env.spec,

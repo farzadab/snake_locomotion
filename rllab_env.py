@@ -6,49 +6,9 @@ from rllab.spaces import Box
 from snake import Snake
 from random import uniform
 from math import pi, sin, cos
+import controllers
 # import time
 # from numpy.fft import ifft
-
-class LLC(object):
-    '''
-    Base class for a Low Level Controller
-    '''
-    def num_inputs(self, num_links):
-        return num_links-1
-
-    def transform(self, hl_controls, step_num=0):
-        '''
-        Gets as input an array of high level control inputs
-        and outputs the low level controls
-        '''
-        return hl_controls
-
-
-class FFTController(LLC):
-    '''
-    This is not really a controller, it's just a transformation on the input space for the robot
-    '''
-    # def __init__()
-    def num_inputs(self, num_links):
-        return num_links-3
-
-    def transform(self, hl_controls, step_num=0):
-        '''
-        Uses inverse DFT to create the inputs for the robot model
-        The outputs are always real values
-        '''
-        first_half = np.array(hl_controls[::2]) + np.array(hl_controls[1::2]) * 1j
-        whole_array = np.concatenate([
-            [0],
-            first_half,
-            [0],
-            np.flip(first_half.conj(), axis=0),
-            # first_half.conj(),
-        ])
-        shift = np.exp(-2j * pi * step_num / SimpleSnakeEnv.STEP_DURATION * np.array(range(len(whole_array))))
-        # The final `.real()` shouldn't be needed here, just taking care of numerical errors
-        return np.fft.ifft(whole_array * shift).real * len(whole_array)
-
 
 class SimpleSnakeEnv(Env):
     '''
@@ -67,7 +27,7 @@ class SimpleSnakeEnv(Env):
         self.controller = controller
         self.step_num = 0
         if controller is None:
-            self.controller = FFTController()
+            self.controller = controllers.FFTController(self.num_links-1)
 
     def __init_world(self):
         if self.graphical:
@@ -160,7 +120,7 @@ class SimpleSnakeEnv(Env):
         Returns a Space object
         """
         # Assuming num_links is an odd value
-        return Box(low=-1, high=1, shape=(self.controller.num_inputs(self.num_links),))
+        return Box(low=-1, high=1, shape=(self.controller.num_inputs(),))
 
     def __observe(self):
         def clean_and_reorient(state):
