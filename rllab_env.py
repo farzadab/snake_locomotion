@@ -17,11 +17,12 @@ class SimpleSnakeEnv(Env):
     '''
     GOAL_ACHIEVEMENT_THRESHOLD = 1
     STEP_DURATION = 400
-    def __init__(self, num_links=11, controller=None, graphical=False, stepsize=0.0015):
+    def __init__(self, num_links=11, controller=None, graphical=False, stepsize=0.0015, logging=True):
         # Assuming num_links is an odd value
         self.num_links = num_links
         self.graphical = graphical
         self.stepsize = stepsize
+        self.logging = logging
         self.snake = Snake(self.num_links)
         self.__init_world()
         self.controller = controller
@@ -83,7 +84,7 @@ class SimpleSnakeEnv(Env):
         self.__apply_action(action)
         p.stepSimulation()
         rew = self.__calc_reward(action, last_com)
-        if self.step_num % 300 == 0:
+        if self.logging and self.step_num % 300 == 0:
             print(self.objective, self.snake.calc_COM()[:2], rew)
         return self.__observe(), rew, self.__is_done(), {}
 
@@ -102,7 +103,8 @@ class SimpleSnakeEnv(Env):
         -------
         observation : the initial observation of the space. (Initial reward is assumed to be 0.)
         """
-        print('env was reset')
+        if self.logging:
+            print('env was reset')
         self.step_num = 0
         p.resetSimulation()
         p.loadURDF("plane.urdf")
