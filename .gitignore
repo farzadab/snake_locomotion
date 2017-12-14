@@ -5,3 +5,6 @@ snake.urdf
 *.gv
 
 __pycache__
+
+.idea
+.DS_Store

@@ -3,10 +3,10 @@
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <cylinder length="0.6" radius="0.2"/>
+                <cylinder length="5" radius="0.02"/>
             </geometry>
-            <material name="Cyan">
-                <color rgba="0 1.0 1.0 1.0"/>
+            <material name="Red">
+                <color rgba="1.0 0.1 0.0 1.0"/>
             </material>
         </visual>
 

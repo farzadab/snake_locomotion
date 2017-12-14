@@ -21,11 +21,11 @@ algo = PPO(
     env=env,
     policy=policy,
     baseline=baseline,
-    batch_size=40000,
+    batch_size=80000,
     whole_paths=True,
-    max_path_length=2000,
-    n_itr=200,
-    discount=0.995,
-    step_size=0.01,
+    max_path_length=4000,
+    n_itr=400,
+    discount=0.999,
+    step_size=0.04,
 )
 algo.train()

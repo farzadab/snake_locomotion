@@ -128,8 +128,8 @@ class SimpleSnakeEnv(Env):
         return self.__observe(), rew, self.__is_done(), {}
 
     def __create_random_objective(self):
-        radius = uniform(.5, 1)  # TODO: get these as parameters
-        theta = uniform(-pi/4, pi/4)
+        radius = uniform(.5, .7)  # TODO: get these as parameters
+        theta = uniform(-pi/10, pi/10)
         return [radius * sin(theta), radius * cos(theta)]
 
     def __calc_pos_from_objective(self, pos):
