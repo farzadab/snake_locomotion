@@ -4,6 +4,7 @@
 from model_generator import createNLinkSnake, DEFAULT_OUTPUT_FILE as SnakeUrdfFile
 from math import sqrt
 import numpy as np
+import pybullet as p
 
 
 class ObjectWorld(object):
@@ -11,8 +12,8 @@ class ObjectWorld(object):
     Just a proxy for interacting with PyBullet
     that always invokes methods with `object_id` as the first argument
     '''
-    def __init__(self, world, object_id):
-        self.world = world
+    def __init__(self, object_id):
+        self.world = p
         self.object_id = object_id
 
     def __wrap(self, func):
@@ -23,9 +24,13 @@ class ObjectWorld(object):
     def __getattr__(self, attr_name):
         if hasattr(self.world, attr_name):
             attr = getattr(self.world, attr_name)
-            if callable(attr):
+            if callable(attr) and attr_name[:2] != '__':
                 return self.__wrap(attr)
             return attr
+        raise AttributeError
+
+    def __reduce__(self):
+        return (self.__class__, (self.object_id, ))
 
 
 class Snake(object):
@@ -39,12 +44,15 @@ class Snake(object):
         self.my_id = -1
         self.world = None
 
-    def load(self, world, p_x=0, p_y=0, r_x=0, r_y=0, r_z=0):
-        '''Load this snake in the simulated world'''
+    def load(self, world=p, p_x=0, p_y=0, r_x=0, r_y=0, r_z=0):
+        '''
+        Load this snake in the simulated world
+        ** world is deprecated and has no effect
+        '''
         self.start_pos = [p_x, p_y, .25]
         self.start_quaternion = world.getQuaternionFromEuler([r_x, r_y, r_z])
         self.my_id = world.loadURDF(SnakeUrdfFile, self.start_pos, self.start_quaternion)
-        self.world = ObjectWorld(world, self.my_id)
+        self.world = ObjectWorld(self.my_id)
         self.joints = [
             Joint(self.world, i, -1) for i in range(0, self.world.getNumJoints())
         ]
