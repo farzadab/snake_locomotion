@@ -27,6 +27,7 @@ class SimpleSnakeEnv(Env):
         self.__init_world()
         self.controller = controller
         self.step_num = 0
+        self.com_id = -1
         if controller is None:
             self.controller = controllers.FFTController(self.num_links-1)
 
@@ -84,8 +85,11 @@ class SimpleSnakeEnv(Env):
         self.__apply_action(action)
         p.stepSimulation()
         rew = self.__calc_reward(action, last_com)
+        cur_com = self.snake.calc_COM()
+        if self.graphical and self.com_id != -1:
+            p.resetBasePositionAndOrientation(self.com_id, cur_com, p.getQuaternionFromEuler([0, 0, 0]))
         if self.logging and self.step_num % 300 == 0:
-            print(self.objective, self.snake.calc_COM()[:2], rew)
+            print(self.objective, cur_com[:2], rew)
         return self.__observe(), rew, self.__is_done(), {}
 
     def __create_random_objective(self):
@@ -114,6 +118,7 @@ class SimpleSnakeEnv(Env):
         self.objective = self.__create_random_objective()
         if self.graphical:
             p.loadURDF('objective_object.urdf', self.objective + [.3])
+            self.com_id = p.loadURDF("COM_object.urdf", self.snake.calc_COM())
         return self.__observe()
 
     @property

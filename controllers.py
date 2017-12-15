@@ -112,3 +112,17 @@ class SimpleSinusoidController(LLC):
         '''
         w, phase = hl_controls
         return np.sin(w * step_num + phase * np.array(list(range(self.num_outputs))))
+
+
+ctrl_name_to_class = {
+    'simple': LLC,
+    'rotating': RotatingLLC,
+    'dft': FFTController,
+    'dft-rotating': RotatingFFTController,
+    'sinusoid': SimpleSinusoidController,
+}
+
+def get_controller_by_name(name):
+    if name in ctrl_name_to_class:
+        return ctrl_name_to_class[name]
+    return FFTController
