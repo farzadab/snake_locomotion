@@ -3,12 +3,15 @@ from rllab.algos.trpo import TRPO
 from rllab.algos.ppo import PPO
 from rllab.algos.cma_es import CMAES
 from rllab.baselines.linear_feature_baseline import LinearFeatureBaseline
-from rllab.envs.box2d.cartpole_env import CartpoleEnv
+# from rllab.envs.box2d.cartpole_env import CartpoleEnv
 from rllab.envs.normalized_env import normalize
 from rllab.misc.instrument import run_experiment_lite
 from rllab.policies.gaussian_mlp_policy import GaussianMLPPolicy
 from rllab_env import SimpleSnakeEnv
+from rllab import config
 from controllers import get_controller_by_name
+
+config.PROJECT_PATH = '.'
 
 def run_task(*_):
     NUM_LINKS = 9
@@ -58,5 +61,7 @@ if __name__ == '__main__':
         # will be used
         seed=1,
         # plot=True,
+        script="rllab_scripts/run_experiment_lite.py",
+        log_dir='./logs',
         exp_name= args.controller + '_' + str(args.n_iters) + '-iters',
     )
