@@ -1,8 +1,17 @@
+#### make sure you these installed:
+# cmake
+# tk
+
 jinja2
 pybullet
 numpy
 path.py
-# rllab
+Box2D
+
+# don't know why!
+matplotlib
+
+git+https://github.com/rll/rllab 
 
 # the fuck
 git+https://github.com/Lasagne/Lasagne.git
