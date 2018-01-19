@@ -15,9 +15,9 @@ class SimpleSnakeEnv(Env):
     An RL-Lab environment for our snake model
     By default it uses FFTController
     '''
-    GOAL_ACHIEVEMENT_THRESHOLD = 1
+    GOAL_ACHIEVEMENT_THRESHOLD = 0.5
     STEP_DURATION = 400
-    def __init__(self, num_links=11, controller=None, graphical=False, stepsize=0.0015, logging=True):
+    def __init__(self, num_links=11, controller=None, graphical=False, stepsize=0.002, logging=False):
         # Assuming num_links is an odd value
         self.num_links = num_links
         self.graphical = graphical
@@ -59,7 +59,7 @@ class SimpleSnakeEnv(Env):
         d_v = np.subtract(cur_com, last_com)[:2]
         distance_penalty = (goal ** 2).mean() / np.linalg.norm(self.objective) / 100
         velocity_reward = np.dot(goal, d_v) / np.linalg.norm(goal)
-        return -1 + velocity_reward - distance_penalty
+        return -1 + velocity_reward/10 - distance_penalty/10
 
     def __is_done(self):
         diff = self.__calc_pos_from_objective(self.snake.calc_COM()) ** 2
@@ -80,10 +80,11 @@ class SimpleSnakeEnv(Env):
         done : a boolean, indicating whether the episode has ended
         info : a dictionary containing other diagnostic information from the previous action
         """
-        self.step_num += 1
         last_com = self.snake.calc_COM()
-        self.__apply_action(action)
-        p.stepSimulation()
+        for _ in range(100):
+            self.step_num += 1
+            self.__apply_action(action)
+            p.stepSimulation()
         rew = self.__calc_reward(action, last_com)
         cur_com = self.snake.calc_COM()
         if self.graphical and self.com_id != -1:
@@ -93,8 +94,8 @@ class SimpleSnakeEnv(Env):
         return self.__observe(), rew, self.__is_done(), {}
 
     def __create_random_objective(self):
-        radius = uniform(.5, .7)  # TODO: get these as parameters
-        theta = uniform(-pi/10, pi/10)
+        radius = uniform(.5, 1)  # TODO: get these as parameters
+        theta = uniform(-pi/4, pi/4)
         return [radius * sin(theta), radius * cos(theta)]
 
     def __calc_pos_from_objective(self, pos):
